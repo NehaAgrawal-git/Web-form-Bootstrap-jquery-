@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <title>Employee Form</title>
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+
+    .form-container {
+      border: 1px solid black;
+      padding: 20px;
+    }
+
+    .center-heading {
+      text-align: center;
+    }
+
+    #employeeTable td {
+      vertical-align: middle;
+    }
+
+    .dark-bg {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .table-dark {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .table-dark th,
+    .table-dark td {
+      border-color: #fff;
+      padding: 10px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .table-sm td {
+      font-size: 14px;
+    }
+
+    .table-dark tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Additional CSS to remove white lines */
+    .table-bordered td {
+      border: none;
+    }
+
+    .table-bordered th {
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .table-dark th:nth-child(1),
+    .table-dark td:nth-child(1) {
+      width: 25%;
+    }
+
+    .table-dark th:nth-child(2),
+    .table-dark td:nth-child(2) {
+      width: 15%;
+    }
+
+    .table-dark th:nth-child(3),
+    .table-dark td:nth-child(3) {
+      width: 15%;
+    }
+
+    .table-dark th:nth-child(4),
+    .table-dark td:nth-child(4) {
+      width: 10%;
+    }
+
+    .table-dark th:nth-child(5),
+    .table-dark td:nth-child(5) {
+      width: 20%;
+    }
+
+    .table-dark th:nth-child(6),
+    .table-dark td:nth-child(6) {
+      width: 15%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="center-heading">Connection Group Assignment</h2>
+    <div class="row">
+      <div class="col">
+        <div class="form-container">
+          <h3 class="center-heading">Registration Form</h3>
+          <form id="employeeForm">
+            <div class="form-group">
+              <label for="employeeId">Employee Id:</label>
+              <input type="text" class="form-control" id="employeeId" required>
+            </div>
+            <div class="form-group">
+              <label for="employeeName">Employee Name:</label>
+              <input type="text" class="form-control" id="employeeName" required>
+            </div>
+            <div class="form-group">
+              <label for="employeeBirthdate">Date of birth:</label>
+              <input type="text" class="form-control" id="employeeBirthdate" placeholder="DD-MM-YYYY" pattern="(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender:</label>
+              <select class="form-control" id="gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="mobileNumber">Mobile Number:</label>
+              <input type="text" class="form-control" id="mobileNumber" placeholder="XXX-XXXX-XXXX" required>
+            </div>
+            <div class="form-group">
+              <label for="department">Department:</label>
+              <select class="form-control" id="department" required>
+                <option value="">Select</option>
+                <option value="IT">IT</option>
+                <option value="HR">HR</option>
+                <option value="Management">Management</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="searchEmployeehere">Search Employee:</label>
+          <input type="text" id="searchEmployeehere" class="form-control" placeholder="Search">
+        </div>
+        <br>
+        <table id="employeeTable" class="table table-bordered table-sm table-dark">
+          <thead>
+            <tr>
+              <th class="text-center">Employee Id</th>
+              <th class="text-center">Employee Name</th>
+              <th class="text-center">Mobile Number</th>
+              <th class="text-center">Gender</th>
+              <th class="text-center">Date Of Birth</th>
+              <th class="text-center">Department</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Function to format the mobile number
+    function formatMobileNumber(mobileNumber) {
+      const cleaned = ('' + mobileNumber).replace(/\D/g, '');
+      const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+      if (match) {
+        return match[1] + '-' + match[2] + '-' + match[3];
+      }
+      return mobileNumber;
+    }
+
+    // Function to format the date of birth
+    function formatDateOfBirth(dateOfBirth) {
+      const match = dateOfBirth.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+      if (match) {
+        return match[1] + '-' + match[2] + '-' + match[3];
+      }
+      return dateOfBirth;
+    }
+
+    $(document).ready(function () {
+      $('#employeeForm').submit(function (e) {
+        e.preventDefault();
+
+        // Get form values
+        const employeeName = $('#employeeName').val();
+        const employeeId = $('#employeeId').val();
+        const employeeBirthdate = formatDateOfBirth($('#employeeBirthdate').val());
+        const gender = $('#gender').val();
+        const mobileNumber = formatMobileNumber($('#mobileNumber').val());
+        const department = $('#department').val();
+
+        // Validate required fields
+        if (employeeName && employeeId && employeeBirthdate && gender && mobileNumber && department) {
+          // Create table row
+          const newRow = $('<tr>').append(
+            $('<td>').text(employeeName),
+            $('<td>').text(employeeId),
+            $('<td>').text(employeeBirthdate),
+            $('<td>').text(gender),
+            $('<td>').text(mobileNumber),
+            $('<td>').text(department)
+          );
+
+          // Append row to table body
+          $('#employeeTable tbody').append(newRow);
+
+          // Clear form fields
+          $('#employeeForm')[0].reset();
+        }
+      });
+
+      // Filter table based on search input
+      $('#searchEmployeehere').keyup(function () {
+        const searchText = $(this).val().toLowerCase();
+
+        // Filter table rows
+        $('#employeeTable tbody tr').each(function () {
+          const name = $(this).find('td:first-child').text().toLowerCase();
+          if (name.includes(searchText)) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
